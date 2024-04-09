@@ -22,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _batteryLevel = 0;
-  int _temperature = 0;
+  String _temperature = "--";
   WeatherFactory wf = WeatherFactory(WEATHERMAP_API_KEY);
 
   late Timer _timerOneMinute;
@@ -280,7 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _temperature.toString(),
+                        _temperature,
                         style: TextStyle(
                           fontSize: 18,
                           color: lightTextColor,
@@ -332,7 +332,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     setState(() {
-      _temperature = weather.temperature!.celsius!.toInt();
+      _temperature = weather.temperature!.celsius!.toInt().toString();
     });
   }
 
