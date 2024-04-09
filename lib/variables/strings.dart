@@ -1,4 +1,4 @@
-const String WEATHERMAP_API_KEY = "0bc7fc0798ba56b2f836175ef5550bc3";
+const String WEATHERMAP_API_KEY = "YOUR_API_KEY_HERE";
 
 // native methods
 const String methodOpenApp = "openApp";
