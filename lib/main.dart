@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mlauncher/pages/home_screen.dart';
+import 'package:mlauncher/pages/left_screen.dart';
+import 'package:mlauncher/pages/right_screen.dart';
 import 'package:mlauncher/variables/colors.dart';
 import 'package:mlauncher/variables/strings.dart';
 
@@ -55,9 +57,9 @@ class _MyAppState extends State<MyApp> {
                 controller: _pageController,
                 // onPageChanged: _onPageChanged,
                 children: const [
-                  // LeftScreen(),
+                  LeftScreen(),
                   HomeScreen(),
-                  // RightScreen(),
+                  RightScreen(),
                 ],
               ),
             );

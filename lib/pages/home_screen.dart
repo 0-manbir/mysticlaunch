@@ -147,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               onTap: () async {
                 try {
-                  openAppByPackageName("com.google.android.gm");
+                  openAppByPackageName(gmailPackageName);
                 } catch (e) {
                   // error in opening gmail
                 }
