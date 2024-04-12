@@ -34,10 +34,6 @@ class MainActivity: FlutterActivity() {
     private val TAG = "MainChannel"
     private val CHANNEL = "main_channel"
 
-    override fun onBackPressed() {
-        
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         intent.putExtra("background_mode", transparent.toString())
         super.onCreate(savedInstanceState)

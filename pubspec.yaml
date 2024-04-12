@@ -45,8 +45,9 @@ dependencies:
   geolocator: ^11.0.0
   device_apps: ^2.2.0
   installed_apps: ^1.5.0
-  app_usage: ^3.0.1
   shared_preferences: ^2.2.2
+  flutter_wallpaper_manager: ^0.0.4
+  file_picker: ^6.2.0
 
 dev_dependencies:
   flutter_test:

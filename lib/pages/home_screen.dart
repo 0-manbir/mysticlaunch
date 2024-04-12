@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:battery_info/battery_info_plugin.dart';
@@ -7,9 +9,11 @@ import 'package:android_intent_plus/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
+import 'package:mlauncher/helpers/grid_view.dart';
 import 'package:mlauncher/variables/colors.dart';
 import 'package:mlauncher/variables/strings.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:weather/weather.dart';
 
@@ -29,6 +33,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    _initSharedPreferences();
+
     _getWeather();
     _getBatteryPercentage();
 
@@ -42,6 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
     );
 
     super.initState();
+  }
+
+  late SharedPreferences _prefs;
+
+  void _initSharedPreferences() async {
+    _prefs = await SharedPreferences.getInstance();
+
+    if (!_prefs.containsKey(prefsHomeScreenApps)) {
+      _prefs.setStringList(prefsHomeScreenApps, []);
+    }
+
+    // methods getting shared prefs
+    _getTotalHomeScreenApps();
+    _getHomeScreenAppsAlignment();
   }
 
   @override
@@ -64,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
             widgets(),
             Container(height: 20),
             Expanded(child: Container()),
-            // apps
+            homeScreenApps(),
             Expanded(child: Container()),
             bottomIcons(),
             Container(height: 20),
@@ -73,6 +93,367 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  // home screen icons-----------------------------------------------------------------------------------------------------------------------
+  int _totalHomeScreenApps = 0;
+
+  Widget homeScreenApps() {
+    return Expanded(
+      child: Center(
+        child: ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _totalHomeScreenApps,
+          itemBuilder: (BuildContext context, int index) {
+            if (_prefs.containsKey(prefsHomeScreenApps)) {
+              String appItem =
+                  _prefs.getStringList(prefsHomeScreenApps)![index];
+
+              return homeScreenApp(
+                appItem.substring(appItem.indexOf(',') + 1),
+                appItem.substring(0, appItem.indexOf(',')),
+                index,
+                context,
+              );
+            }
+            return Container();
+          },
+        ),
+      ),
+    );
+  }
+
+  final TextEditingController _homeScreenNameEditController =
+      TextEditingController();
+  final TextEditingController _homeScreenIndexEditController =
+      TextEditingController();
+  Alignment homeScreenAppsAlignment = Alignment.center;
+
+  // home screen app template
+  Widget homeScreenApp(
+    String appName,
+    String packageName,
+    int index,
+    BuildContext buildContext,
+  ) {
+    double screenWidth = MediaQuery.of(buildContext).size.width;
+
+    return Container(
+      alignment: homeScreenAppsAlignment,
+      child: GestureDetector(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 32,
+            vertical: 8,
+          ),
+          child: Text(
+            appName.toLowerCase(),
+            style: TextStyle(
+              fontSize: 26,
+              color: darkTextColor,
+              fontFamily: 'Rubik',
+              fontWeight: FontWeight.w400,
+              height: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ),
+        onTap: () {
+          // open app
+          HapticFeedback.mediumImpact();
+          openAppByPackageName(packageName);
+        },
+        onLongPress: () {
+          HapticFeedback.heavyImpact();
+
+          _homeScreenNameEditController.text = appName;
+          _homeScreenIndexEditController.text = index.toString();
+
+          // show options to edit the app name / delete the app from home screen
+          showModalBottomSheet(
+            context: buildContext,
+            builder: (context) {
+              return Container(
+                width: screenWidth,
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(40),
+                  ),
+                  color: Colors.grey[100],
+                ),
+                child: Column(
+                  children: [
+                    // edit the app name
+                    Container(height: 20),
+                    Text(
+                      "enter the app name: ",
+                      style: TextStyle(
+                        color: Colors.grey[500],
+                        fontFamily: 'Rubik',
+                        fontSize: 20,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                      child: TextField(
+                        controller: _homeScreenNameEditController,
+                        maxLines: 1,
+                        textInputAction: TextInputAction.done,
+                        cursorColor: Colors.grey[500],
+                        style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                        ),
+                        decoration: InputDecoration(
+                          alignLabelWithHint: true,
+                          labelText: "name",
+                          labelStyle: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.grey[500],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    // edit the app index
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                      child: TextField(
+                        controller: _homeScreenIndexEditController,
+                        maxLines: 1,
+                        keyboardType: TextInputType.number,
+                        textInputAction: TextInputAction.done,
+                        cursorColor: Colors.grey[500],
+                        style: TextStyle(
+                          fontFamily: 'Rubik',
+                          color: Colors.grey[700],
+                          fontSize: 14,
+                        ),
+                        decoration: InputDecoration(
+                          alignLabelWithHint: true,
+                          labelText: "position (starting at 0)",
+                          labelStyle: TextStyle(
+                            fontFamily: 'Rubik',
+                            color: Colors.grey[500],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                    Expanded(flex: 3, child: Container()),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // set home screen alignment
+                        GestureDetector(
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Icon(
+                              Icons.format_align_center_rounded,
+                              color: Colors.grey[600],
+                              size: 28,
+                            ),
+                          ),
+                          onTap: () {
+                            int currAlignment = _prefs
+                                    .containsKey(prefsHomeScreenAppsAlignment)
+                                ? _prefs.getInt(prefsHomeScreenAppsAlignment)!
+                                : 0;
+
+                            if (currAlignment == 2) {
+                              currAlignment = 0;
+                            } else {
+                              currAlignment++;
+                            }
+
+                            _prefs.setInt(
+                                prefsHomeScreenAppsAlignment, currAlignment);
+
+                            setState(() {
+                              switch (currAlignment) {
+                                case 0:
+                                  homeScreenAppsAlignment = Alignment.center;
+                                  break;
+                                case 1:
+                                  homeScreenAppsAlignment =
+                                      Alignment.centerLeft;
+                                  break;
+                                case 2:
+                                  homeScreenAppsAlignment =
+                                      Alignment.centerRight;
+                                  break;
+                                default:
+                                  homeScreenAppsAlignment = Alignment.center;
+                              }
+                            });
+
+                            Navigator.pop(buildContext);
+                          },
+                        ),
+
+                        Container(width: 16),
+
+                        // delete button----------------------------------
+                        GestureDetector(
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Icon(
+                              Icons.delete_forever_rounded,
+                              color: Colors.grey[600],
+                              size: 28,
+                            ),
+                          ),
+                          onTap: () {
+                            // delete button
+                            List<String> updatedList =
+                                _prefs.getStringList(prefsHomeScreenApps)!;
+                            updatedList.removeAt(index);
+
+                            _prefs.setStringList(
+                              prefsHomeScreenApps,
+                              updatedList,
+                            );
+
+                            Navigator.pop(buildContext);
+                            setState(() {
+                              _totalHomeScreenApps--;
+                            });
+                          },
+                        ),
+
+                        Container(width: 16),
+
+                        // save button----------------------------------
+                        GestureDetector(
+                          child: Container(
+                            padding: const EdgeInsets.all(16.0),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(25),
+                            ),
+                            child: Icon(
+                              Icons.done_all_rounded,
+                              color: Colors.grey[600],
+                              size: 28,
+                            ),
+                          ),
+                          onTap: () {
+                            // save button
+                            List<String> updatedList =
+                                _prefs.getStringList(prefsHomeScreenApps)!;
+
+                            updatedList[index] =
+                                "$packageName,${_homeScreenNameEditController.text}";
+
+                            int newIndex =
+                                int.parse(_homeScreenIndexEditController.text);
+                            if (index != newIndex) {
+                              if (newIndex < updatedList.length &&
+                                  newIndex >= 0) {
+                                String temp = updatedList[index];
+                                updatedList[index] = updatedList[newIndex];
+                                updatedList[newIndex] = temp;
+                              }
+                            }
+
+                            _prefs.setStringList(
+                              prefsHomeScreenApps,
+                              updatedList,
+                            );
+
+                            Navigator.pop(buildContext);
+                            setState(() {});
+                          },
+                        ),
+                      ],
+                    ),
+
+                    Expanded(child: Container()),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  void _getTotalHomeScreenApps() {
+    int totalApps = 0;
+    try {
+      if (_prefs.containsKey(prefsHomeScreenApps)) {
+        totalApps = _prefs.getStringList(prefsHomeScreenApps)?.length ?? 0;
+      }
+      // ignore: empty_catches
+    } catch (e) {}
+
+    setState(() {
+      _totalHomeScreenApps = totalApps;
+    });
+  }
+
+  void _getHomeScreenAppsAlignment() {
+    Alignment alignment = Alignment.center;
+    if (_prefs.containsKey(prefsHomeScreenAppsAlignment)) {
+      switch (_prefs.getInt(prefsHomeScreenAppsAlignment)) {
+        case 1:
+          alignment = Alignment.centerLeft;
+          break;
+        case 2:
+          alignment = Alignment.centerRight;
+          break;
+        default:
+          break;
+      }
+    }
+
+    setState(() {
+      homeScreenAppsAlignment = alignment;
+    });
+  }
+
+  Future<void> addHomeScreenApp(BuildContext buildContext) async {
+    // add a new home screen app
+    HapticFeedback.mediumImpact();
+
+    try {
+      ApplicationInfo? applicationInfo =
+          await AppsGridView().showGridView(context, true);
+
+      String packageName = applicationInfo!.packageName;
+      String appName = applicationInfo.appName;
+
+      List<String> updatedList = _prefs.getStringList(prefsHomeScreenApps)!;
+      updatedList.add("$packageName,$appName");
+
+      _prefs.setStringList(
+        prefsHomeScreenApps,
+        updatedList,
+      );
+
+      // ignore: use_build_context_synchronously
+      Navigator.pop(buildContext);
+    } catch (e) {
+      // print("$e");
+    }
+
+    setState(() {
+      _totalHomeScreenApps++;
+    });
+  }
+
+  // bottom icons-----------------------------------------------------------------------------------------------------------------------
 
   Widget bottomIcons() {
     return SizedBox(
@@ -108,7 +489,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             Expanded(child: Container()),
 
-            // GALLERY_______________________________________
+            // ADD HOME SCREEN APP__________________________
             GestureDetector(
               child: Container(
                 height: 60,
@@ -118,13 +499,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
-                  Icons.photo_rounded,
+                  Icons.app_shortcut_rounded,
                   size: 34.0,
                   color: lightTextColor,
                 ),
               ),
               onTap: () async {
-                openGallery();
+                try {
+                  await addHomeScreenApp(context);
+                } catch (e) {
+                  // error in adding home screen app
+                  setState(() {});
+                }
               },
             ),
 
@@ -231,7 +617,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         "%",
                         style: TextStyle(
                           fontSize: 10,
-                          color: lightTextColor,
+                          color: darkTextColor,
                           fontFamily: 'Rubik',
                           fontWeight: FontWeight.w400,
                         ),
@@ -241,66 +627,90 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               Container(width: 70),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "${DateTime.now().day.toString()} ${DateFormat.MMMM().format(DateTime.now())}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: lightTextColor,
-                      fontFamily: 'Rubik',
-                      fontWeight: FontWeight.w400,
-                      height: 1,
+              GestureDetector(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(height: 6),
+                    Text(
+                      "${DateTime.now().day.toString()} ${DateFormat.MMMM().format(DateTime.now())}",
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: lightTextColor,
+                        fontFamily: 'Rubik',
+                        fontWeight: FontWeight.w400,
+                        height: 1,
+                      ),
                     ),
-                  ),
-                  Text(
-                    DateFormat.EEEE().format(DateTime.now()),
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: lightTextColor,
-                      fontFamily: 'Rubik',
-                      fontWeight: FontWeight.w400,
+                    Text(
+                      DateFormat.EEEE().format(DateTime.now()),
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: darkTextColor,
+                        fontFamily: 'Rubik',
+                        fontWeight: FontWeight.w400,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+                onTap: () async {
+                  const String url = 'content://com.android.calendar/time/';
+
+                  if (await canLaunchUrlString(url)) {
+                    await launchUrlString(url);
+                  } else {
+                    // print('Could not launch $url');
+                  }
+                },
               ),
               Container(width: 70),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.cloud_rounded,
-                    size: 16,
-                    color: lightTextColor,
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _temperature,
-                        style: TextStyle(
-                          fontSize: 18,
-                          color: lightTextColor,
-                          fontFamily: 'Rubik',
-                          fontWeight: FontWeight.w400,
-                          height: 1.15,
+              GestureDetector(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.cloud_rounded,
+                      size: 16,
+                      color: lightTextColor,
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _temperature,
+                          style: TextStyle(
+                            fontSize: 18,
+                            color: lightTextColor,
+                            fontFamily: 'Rubik',
+                            fontWeight: FontWeight.w400,
+                            height: 1.15,
+                          ),
                         ),
-                      ),
-                      Text(
-                        "°C",
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: lightTextColor,
-                          fontFamily: 'Rubik',
-                          fontWeight: FontWeight.w400,
+                        Text(
+                          "°C",
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: darkTextColor,
+                            fontFamily: 'Rubik',
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  setState(() {
+                    _temperature = "--";
+                    _getWeather();
+                  });
+                },
+                onLongPress: () {
+                  HapticFeedback.mediumImpact();
+                  searchGoogle("weather");
+                },
               ),
             ],
           ),
@@ -345,14 +755,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Future<void> openGallery() async {
-    try {
-      await _channel.invokeMethod(methodOpenGallery);
-    } catch (e) {
-      // print('Error invoking searchGoogle method: $e');
-    }
-  }
-
   Future<void> openAppByPackageName(String packageName) async {
     try {
       await _channel.invokeMethod(methodOpenApp, {'packageName': packageName});
@@ -383,7 +785,7 @@ class ClockWidget extends StatelessWidget {
                   fontSize: 72,
                   color: lightTextColor,
                   fontFamily: 'Rubik',
-                  fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w400,
                   height: .9,
                 ),
               ),
@@ -400,7 +802,7 @@ class ClockWidget extends StatelessWidget {
               getTimeAbbr(DateTime.now()),
               style: TextStyle(
                 fontSize: 22,
-                color: lightTextColor,
+                color: darkTextColor,
                 fontFamily: 'Rubik',
                 fontWeight: FontWeight.w600,
                 height: 1.4,

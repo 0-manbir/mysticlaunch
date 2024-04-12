@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:app_usage/app_usage.dart';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mlauncher/variables/colors.dart';
 import 'package:mlauncher/variables/strings.dart';
 
 class AppsGridView {
   List displayedApps = [];
-  List<AppUsageInfo> appInfoList = [];
 
   late String iconFilePath;
 
@@ -26,7 +25,7 @@ class AppsGridView {
     sortAppsByName();
 
     showModalBottomSheet(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: backgroundColor,
       // rectangular corners
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       isScrollControlled: true,
@@ -42,19 +41,20 @@ class AppsGridView {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Container(height: 12),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "all apps:",
                       style: TextStyle(
-                        fontFamily: 'Inter',
+                        fontFamily: 'Rubik',
                         fontSize: 24,
-                        color: Colors.grey[500],
+                        color: lightTextColor,
                       ),
                     ),
                   ),
                   SizedBox(
-                    height: screenHeight - 50,
+                    height: screenHeight - 90,
                     width: screenWidth,
                     child: GridView.builder(
                       gridDelegate:
@@ -100,12 +100,12 @@ class AppsGridView {
                                   displayedApps[index].appName,
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                    fontFamily: 'Inter',
+                                    fontFamily: 'Rubik',
                                     fontSize: 12,
-                                    color: Colors.grey[700],
+                                    color: lightTextColor,
                                   ),
                                   maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
+                                  overflow: TextOverflow.clip,
                                 ),
                               ],
                             ),
@@ -114,14 +114,12 @@ class AppsGridView {
                             if (returnApplicationInfo) {
                               ApplicationInfo selectedApp = ApplicationInfo(
                                 appName: displayedApps[index].appName,
-                                appUsage: _getFormattedAppUsage(_getAppUsage(
-                                    displayedApps[index].packageName)),
                                 packageName: displayedApps[index].packageName,
                                 iconPath: iconFilePath,
                               );
 
                               completer.complete(selectedApp);
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
                             } else {
                               _openApp(index, context);
                               completer.complete(null);
@@ -169,24 +167,13 @@ class AppsGridView {
       // includeAppIcons: true,
     );
 
-    List<AppUsageInfo> infoList = [];
-
-    try {
-      DateTime now = DateTime.now();
-      DateTime start = DateTime(now.year, now.month, now.day, 0, 1, 0);
-      infoList = await AppUsage().getAppUsage(start, now);
-    } on AppUsageException {
-      appInfoList = [];
-    }
-
     displayedApps = apps;
-    appInfoList = infoList;
   }
 
   bool doesIconFileExist(String packageName) {
     String iconFileName = 'icon_$packageName.png';
     String iconFilePath =
-        '/data/user/0/com.manbir.mysticlaunch/cache/$iconFileName';
+        '/data/user/0/$mlauncherPackageName/cache/$iconFileName';
 
     File iconFile = File(iconFilePath);
     return iconFile.existsSync();
@@ -219,44 +206,16 @@ class AppsGridView {
         .compareTo(b.appName.toString().toLowerCase()));
   }
 
-  Duration _getAppUsage(String packageName) {
-    for (AppUsageInfo appUsage in appInfoList) {
-      if (appUsage.packageName == packageName) {
-        return appUsage.usage;
-      }
-    }
-    return Duration.zero;
-  }
-
-  String _getFormattedAppUsage(Duration usage) {
-    if (usage < const Duration(minutes: 1)) return "";
-
-    int hours = usage.inHours;
-    int remainingMinutes = usage.inMinutes.remainder(60);
-
-    if (hours > 0) {
-      if (remainingMinutes > 0) {
-        return '${hours}h ${remainingMinutes}m';
-      } else {
-        return '${hours}h';
-      }
-    } else {
-      return '${remainingMinutes}m';
-    }
-  }
-
   static const MethodChannel _channel = MethodChannel('main_channel');
 }
 
 class ApplicationInfo {
   String appName;
-  String appUsage;
   String packageName;
   String iconPath;
 
   ApplicationInfo({
     required this.appName,
-    required this.appUsage,
     required this.packageName,
     required this.iconPath,
   });
