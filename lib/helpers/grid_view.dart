@@ -105,7 +105,7 @@ class AppsGridView {
                                     color: lightTextColor,
                                   ),
                                   maxLines: 1,
-                                  overflow: TextOverflow.clip,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -119,7 +119,9 @@ class AppsGridView {
                               );
 
                               completer.complete(selectedApp);
-                              // Navigator.pop(context);
+                              if (Navigator.canPop(context)) {
+                                Navigator.pop(context);
+                              }
                             } else {
                               _openApp(index, context);
                               completer.complete(null);
@@ -154,7 +156,7 @@ class AppsGridView {
   }
 
   void _openAppSettings(int index, BuildContext buildContext) {
-    // Navigator.pop(buildContext);
+    // if (Navigator.canPop(buildContext)) Navigator.pop(buildContext);
     HapticFeedback.mediumImpact();
 
     displayedApps[index].openSettingsScreen();

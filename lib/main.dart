@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:device_apps/device_apps.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mlauncher/helpers/grid_view.dart';
@@ -10,7 +9,6 @@ import 'package:mlauncher/pages/left_screen.dart';
 import 'package:mlauncher/pages/right_screen.dart';
 import 'package:mlauncher/variables/colors.dart';
 import 'package:mlauncher/variables/strings.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,45 +29,72 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Listen for home button presses
+    // This will trigger whenever the home button is pressed on Android
+    // You can also use WillPopScope to listen for back button presses
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      FocusScope.of(context).requestFocus(FocusNode());
+      RawKeyboard.instance.addListener(_handleKeyEvent);
+    });
+  }
+
+  void _handleKeyEvent(RawKeyEvent event) {
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.home) {
+        // When the home button is pressed, set the page controller to index 1 (home screen)
+        _pageController.jumpToPage(1);
+      }
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: AppBar(
+      home: PopScope(
+        canPop: false,
+        onPopInvoked: (didPop) {
+          _pageController.jumpToPage(1);
+        },
+        child: Scaffold(
           backgroundColor: backgroundColor,
-          toolbarHeight: 0,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            systemNavigationBarColor: backgroundColor,
-            statusBarColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: backgroundColor,
+            toolbarHeight: 0,
+            systemOverlayStyle: const SystemUiOverlayStyle(
+              systemNavigationBarColor: backgroundColor,
+              statusBarColor: Colors.transparent,
+            ),
           ),
-        ),
-        body: Builder(
-          builder: (context) {
-            // swipe gestures------------------------------------------
-            return GestureDetector(
-              onVerticalDragEnd: (details) {
-                if (details.primaryVelocity! > 0) {
-                  // Swipe down
-                  expandNotification();
-                } else if (details.primaryVelocity! < 0) {
-                  // Swipe up
-                  _openAppDrawer(context);
-                }
-              },
+          body: Builder(
+            builder: (context) {
+              // swipe gestures------------------------------------------
+              return GestureDetector(
+                onVerticalDragEnd: (details) {
+                  if (details.primaryVelocity! > 0) {
+                    // Swipe down
+                    expandNotification();
+                  } else if (details.primaryVelocity! < 0) {
+                    // Swipe up
+                    _openAppDrawer(context);
+                  }
+                },
 
-              // pages-------------------------------------------------
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: _onPageChanged,
-                children: const [
-                  LeftScreen(),
-                  HomeScreen(),
-                  RightScreen(),
-                ],
-              ),
-            );
-          },
+                // pages-------------------------------------------------
+                child: PageView(
+                  controller: _pageController,
+                  onPageChanged: _onPageChanged,
+                  children: const [
+                    LeftScreen(),
+                    HomeScreen(),
+                    RightScreen(),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -84,9 +109,14 @@ class _MyAppState extends State<MyApp> {
   String currentText = '';
   bool isRecentAppsVisible = true;
 
+  TextEditingController searchTextController = TextEditingController();
+
   void _openAppDrawer(BuildContext buildContext) {
     double screenHeight = MediaQuery.of(buildContext).size.height;
     isRecentAppsVisible = true;
+    displayedApps = [];
+    recentApps = [];
+    searchTextController.text = "";
 
     showModalBottomSheet(
       backgroundColor: backgroundColor,
@@ -115,7 +145,7 @@ class _MyAppState extends State<MyApp> {
                     ),
                     child: Center(
                       child: Text(
-                        "show all apps",
+                        "all apps",
                         style: TextStyle(
                           fontFamily: 'Rubik',
                           fontSize: 26,
@@ -132,7 +162,9 @@ class _MyAppState extends State<MyApp> {
                       buildContext,
                       false,
                     );
-                    Navigator.pop(buildContext);
+                    if (Navigator.canPop(buildContext)) {
+                      Navigator.pop(buildContext);
+                    }
                   },
                 ),
 
@@ -158,54 +190,29 @@ class _MyAppState extends State<MyApp> {
                               if (recentApps.isNotEmpty) {
                                 return recentAppsApp(context, index);
                               }
-                              return ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
-                                child: Row(
-                                  children: [
-                                    Container(
-                                      width: 60,
-                                      height: 60,
-                                      decoration: BoxDecoration(
-                                        color: opaqueBackgroundColor,
-                                        borderRadius: BorderRadius.circular(15),
-                                      ),
-                                      child: Icon(
-                                        Icons.error_outline_rounded,
-                                        size: 40.0,
-                                        color: lightTextColor,
-                                      ),
-                                    ),
-                                    Container(width: 8),
-                                  ],
-                                ),
-                              );
+                              return Container();
                             },
                           ),
                         ),
                       )
-                    : Container(
-                        margin: const EdgeInsets.only(
-                          bottom: 16.0,
-                          left: 16.0,
-                          right: 16.0,
-                        ),
-                        padding: const EdgeInsets.all(10.0),
-                        height: 75,
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
+                    : Container(),
 
                 // search results
                 SizedBox(
                   height: MediaQuery.of(context).viewInsets.bottom > 0
-                      ? screenHeight - 330 - 225
-                      : screenHeight - 80 - 225,
+                      ? screenHeight -
+                          50 -
+                          330 -
+                          225 +
+                          (isRecentAppsVisible ? 0 : 75 + 16)
+                      : screenHeight -
+                          50 -
+                          80 -
+                          225 +
+                          (isRecentAppsVisible ? 0 : 75 + 16),
                   child: ListView.builder(
                     reverse: true,
-                    // itemCount: displayedApps.length,
-                    itemCount: 6,
+                    itemCount: displayedApps.length,
                     itemBuilder: (context, index) {
                       if (displayedApps.length <= index) {
                         return Container();
@@ -216,18 +223,16 @@ class _MyAppState extends State<MyApp> {
                             horizontal: 15.0,
                             vertical: 10.0,
                           ),
-                          child: Center(
-                            child: Text(
-                              displayedApps[index].appName.toLowerCase(),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: lightTextColor,
-                                fontFamily: 'Rubik',
-                                fontWeight: FontWeight.w400,
-                                height: 1,
-                              ),
+                          child: Text(
+                            displayedApps[index].appName.toLowerCase(),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: lightTextColor,
+                              fontFamily: 'Rubik',
+                              fontWeight: FontWeight.w400,
+                              height: 1,
                             ),
                           ),
                         ),
@@ -242,6 +247,98 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
 
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  height: 50,
+                  child: Center(
+                    child: Row(
+                      children: [
+                        Expanded(child: Container()),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: opaqueBackgroundColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Image.asset("icons/app_google.png"),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
+                            searchGoogle(searchTextController.text);
+                          },
+                        ),
+                        Container(width: 8),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: opaqueBackgroundColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Image.asset("icons/app_youtube.png"),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
+                            searchYoutube(searchTextController.text);
+                          },
+                        ),
+                        Container(width: 8),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: opaqueBackgroundColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Image.asset("icons/app_amazon.png"),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
+                            searchAmazon(searchTextController.text);
+                          },
+                        ),
+                        Container(width: 8),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: opaqueBackgroundColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Image.asset("icons/app_firefox.png"),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
+                            searchFirefox(searchTextController.text);
+                          },
+                        ),
+                        Container(width: 8),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: opaqueBackgroundColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Image.asset("icons/app_chatgpt.png"),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
+                            searchChatGPT(searchTextController.text);
+                          },
+                        ),
+                        Container(width: 8),
+                      ],
+                    ),
+                  ),
+                ),
+
                 // search bar
                 Padding(
                   padding: const EdgeInsets.symmetric(
@@ -249,6 +346,7 @@ class _MyAppState extends State<MyApp> {
                     horizontal: 8.0,
                   ),
                   child: TextField(
+                    controller: searchTextController,
                     focusNode: _focusNode,
                     maxLines: 1,
                     textInputAction: TextInputAction.search,
@@ -259,8 +357,8 @@ class _MyAppState extends State<MyApp> {
                       fontSize: 18,
                     ),
                     decoration: InputDecoration(
-                      alignLabelWithHint: true,
-                      labelText: "app name...",
+                      // alignLabelWithHint: true,
+                      // labelText: "app name...",
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
                         borderSide: const BorderSide(color: Colors.transparent),
@@ -280,7 +378,9 @@ class _MyAppState extends State<MyApp> {
                     ),
                     onSubmitted: (value) {
                       // enter pressed
-                      Navigator.pop(context);
+                      if (Navigator.canPop(buildContext)) {
+                        Navigator.pop(buildContext);
+                      }
 
                       if (displayedApps.isEmpty) {
                         // no app remains, search on google
@@ -316,15 +416,10 @@ class _MyAppState extends State<MyApp> {
       },
     );
 
-    // call functions after the bottom sheet is completely shown
+    // called after the bottom sheet is completely shown
     Future.delayed(const Duration(milliseconds: 200), () async {
-      // open keyboard
+      await loadApps();
       FocusScope.of(context).requestFocus(_focusNode);
-
-      // get a list of installed applications
-      loadApps();
-
-      HapticFeedback.mediumImpact();
     });
   }
 
@@ -359,27 +454,7 @@ class _MyAppState extends State<MyApp> {
                 return const Text('App icon path is null.');
               }
             } else {
-              return ClipRRect(
-                borderRadius: BorderRadius.circular(20),
-                child: Row(
-                  children: [
-                    Container(
-                      width: 60,
-                      height: 60,
-                      decoration: BoxDecoration(
-                        color: opaqueBackgroundColor,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Icon(
-                        Icons.error_outline_rounded,
-                        size: 40.0,
-                        color: lightTextColor,
-                      ),
-                    ),
-                    Container(width: 8),
-                  ],
-                ),
-              );
+              return Container();
             }
           },
         ),
@@ -393,7 +468,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  void loadApps() async {
+  Future<void> loadApps() async {
     List<Application> apps = await DeviceApps.getInstalledApplications(
       onlyAppsWithLaunchIntent: true,
       includeSystemApps: true,
@@ -423,12 +498,15 @@ class _MyAppState extends State<MyApp> {
                 app.appName.toLowerCase().contains(query.toLowerCase()))
             .toList();
 
-        if (displayedApps.length == 1 &&
-            displayedApps[0].appName[0].toLowerCase() ==
-                query[0].toLowerCase()) {
-          _openApp(0, buildContext);
-          Navigator.pop(buildContext);
-        }
+        // open app if only one match remains - removed because it might interfere with the search function.
+        // instead, now the only match opens by pressing the search button on the keyboard
+        // if (displayedApps.length == 1 &&
+        //     displayedApps[0].appName[0].toLowerCase() ==
+        //         query[0].toLowerCase()) {
+        //   _openApp(0, buildContext);
+
+        //   if (Navigator.canPop(buildContext)) Navigator.pop(buildContext);
+        // }
 
         // Custom sorting: prioritize apps that start with the query
         displayedApps.sort((a, b) {
@@ -451,7 +529,7 @@ class _MyAppState extends State<MyApp> {
 
   // helper methods---------------------------------------------------------------------------------------------------------------
   void _openApp(int index, BuildContext buildContext) {
-    Navigator.pop(buildContext);
+    if (Navigator.canPop(buildContext)) Navigator.pop(buildContext);
     HapticFeedback.mediumImpact();
     displayedApps[index].openApp();
     setState(() {
@@ -460,7 +538,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _openAppSettings(int index, BuildContext buildContext) {
-    Navigator.pop(buildContext);
+    if (Navigator.canPop(buildContext)) Navigator.pop(buildContext);
     HapticFeedback.mediumImpact();
 
     displayedApps[index].openSettingsScreen();
@@ -503,11 +581,51 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> openSettingsActivity() async {
+    try {
+      await _channel.invokeMethod('openSettingsActivity');
+    } catch (e) {
+      // print('Error invoking openSettingsActivity method: $e');
+    }
+  }
+
   Future<void> searchGoogle(String query) async {
     try {
       await _channel.invokeMethod(methodSearchGoogle, {'query': query});
     } catch (e) {
       // print('Error invoking searchGoogle method: $e');
+    }
+  }
+
+  Future<void> searchFirefox(String query) async {
+    try {
+      await _channel.invokeMethod(methodSearchFirefox, {'query': query});
+    } catch (e) {
+      // print('Error invoking search firefox method: $e');
+    }
+  }
+
+  Future<void> searchYoutube(String query) async {
+    try {
+      await _channel.invokeMethod(methodSearchYoutube, {'query': query});
+    } catch (e) {
+      // print('Error invoking search youtube method: $e');
+    }
+  }
+
+  Future<void> searchChatGPT(String query) async {
+    try {
+      await _channel.invokeMethod(methodSearchChatGPT, {'query': query});
+    } catch (e) {
+      // print('Error invoking search chat gpt method: $e');
+    }
+  }
+
+  Future<void> searchAmazon(String query) async {
+    try {
+      await _channel.invokeMethod(methodSearchAmazon, {'query': query});
+    } catch (e) {
+      // print('Error invoking search amazon method: $e');
     }
   }
 

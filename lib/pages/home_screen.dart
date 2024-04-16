@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:intl/intl.dart';
 import 'package:battery_info/battery_info_plugin.dart';
@@ -35,14 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     _initSharedPreferences();
 
-    _getWeather();
     _getBatteryPercentage();
 
     _timerOneMinute = Timer.periodic(
       const Duration(minutes: 1),
       (Timer timer) {
         // these methods are called every minute
-        _getWeather();
         _getBatteryPercentage();
       },
     );
@@ -62,6 +58,14 @@ class _HomeScreenState extends State<HomeScreen> {
     // methods getting shared prefs
     _getTotalHomeScreenApps();
     _getHomeScreenAppsAlignment();
+
+    if (_prefs.containsKey(prefsWeather)) {
+      setState(() {
+        _temperature = _prefs.getString(prefsWeather) ?? "--";
+      });
+    } else {
+      _getWeather();
+    }
   }
 
   @override
@@ -82,10 +86,8 @@ class _HomeScreenState extends State<HomeScreen> {
             const ClockWidget(),
             Container(height: 20),
             widgets(),
-            Container(height: 20),
-            Expanded(child: Container()),
-            homeScreenApps(),
-            Expanded(child: Container()),
+            Container(height: 25),
+            Expanded(child: homeScreenApps()),
             bottomIcons(),
             Container(height: 20),
           ],
@@ -293,7 +295,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
                             });
 
-                            Navigator.pop(buildContext);
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
                           },
                         ),
 
@@ -324,7 +328,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               updatedList,
                             );
 
-                            Navigator.pop(buildContext);
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
                             setState(() {
                               _totalHomeScreenApps--;
                             });
@@ -371,7 +377,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               updatedList,
                             );
 
-                            Navigator.pop(buildContext);
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
                             setState(() {});
                           },
                         ),
@@ -443,14 +451,14 @@ class _HomeScreenState extends State<HomeScreen> {
       );
 
       // ignore: use_build_context_synchronously
-      Navigator.pop(buildContext);
+      if (Navigator.canPop(buildContext)) Navigator.pop(buildContext);
+
+      setState(() {
+        _totalHomeScreenApps++;
+      });
     } catch (e) {
       // print("$e");
     }
-
-    setState(() {
-      _totalHomeScreenApps++;
-    });
   }
 
   // bottom icons-----------------------------------------------------------------------------------------------------------------------
@@ -741,6 +749,9 @@ class _HomeScreenState extends State<HomeScreen> {
       position.longitude,
     );
 
+    _prefs.setString(
+        prefsWeather, weather.temperature!.celsius!.toInt().toString());
+
     setState(() {
       _temperature = weather.temperature!.celsius!.toInt().toString();
     });
@@ -785,7 +796,7 @@ class ClockWidget extends StatelessWidget {
                   fontSize: 72,
                   color: lightTextColor,
                   fontFamily: 'Rubik',
-                  fontWeight: FontWeight.w400,
+                  fontWeight: FontWeight.w500,
                   height: .9,
                 ),
               ),

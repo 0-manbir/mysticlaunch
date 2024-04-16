@@ -4,11 +4,16 @@ const String WEATHERMAP_API_KEY = "YOUR_API_KEY_HERE";
 const String methodOpenApp = "openApp";
 const String methodExpandNotifications = "expand";
 const String methodSearchGoogle = "searchGoogle";
+const String methodSearchFirefox = "searchFirefox";
+const String methodSearchYoutube = "searchYoutube";
+const String methodSearchChatGPT = "searchChatgpt";
+const String methodSearchAmazon = "searchAmazon";
 const String methodOpenGallery = "openGallery";
 const String methodGetAppIcon = "getAppIconPath";
 
 // shared prefs
 const String prefsHomeScreenApps = 'homeScreenApps';
+const String prefsWeather = 'weather';
 const String prefsHomeScreenAppsAlignment = 'homeScreenAppsAlignment';
 const String prefsLeftScreenApps = 'prefsLeftScreenApps';
 const String prefsRightScreenApps = 'prefsRightScreenApps';

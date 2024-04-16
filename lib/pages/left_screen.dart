@@ -173,7 +173,7 @@ class _LeftScreenState extends State<LeftScreen> {
     return GestureDetector(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(15),
         ),
         child: FutureBuilder<String?>(
@@ -779,6 +779,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
             ),
             onTap: () {
+              HapticFeedback.mediumImpact();
               _changeWallpaper();
             },
           ),
@@ -814,6 +815,7 @@ class _LeftScreenState extends State<LeftScreen> {
               ),
             ),
             onTap: () {
+              HapticFeedback.mediumImpact();
               openSettingsActivity();
             },
           ),

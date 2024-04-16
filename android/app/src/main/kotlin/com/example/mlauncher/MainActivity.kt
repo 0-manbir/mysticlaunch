@@ -58,6 +58,10 @@ class MainActivity: FlutterActivity() {
                     NotificationExpander(this).expand()
                     result.success(null)
                 }
+                "openSettingsActivity" -> {
+                    openSettingsActivity()
+                    result.success(null)
+                }
                 "getAppIconPath" -> {
                     val packageName = call.argument<String>("packageName")
                     if (packageName != null) {
@@ -71,6 +75,42 @@ class MainActivity: FlutterActivity() {
                     val query = call.argument<String>("query")
                     if (query != null) {
                         searchGoogle(query)
+                        result.success(null)
+                    } else {
+                        result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
+                    }
+                }
+                "searchFirefox" -> {
+                    val query = call.argument<String>("query")
+                    if (query != null) {
+                        searchFirefox(query)
+                        result.success(null)
+                    } else {
+                        result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
+                    }
+                }
+                "searchYoutube" -> {
+                    val query = call.argument<String>("query")
+                    if (query != null) {
+                        searchYoutube(query)
+                        result.success(null)
+                    } else {
+                        result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
+                    }
+                }
+                "searchChatgpt" -> {
+                    val query = call.argument<String>("query")
+                    if (query != null) {
+                        searchChatgpt(query)
+                        result.success(null)
+                    } else {
+                        result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
+                    }
+                }
+                "searchAmazon" -> {
+                    val query = call.argument<String>("query")
+                    if (query != null) {
+                        searchAmazon(query)
                         result.success(null)
                     } else {
                         result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
@@ -133,6 +173,16 @@ class MainActivity: FlutterActivity() {
         }
     }
 
+    private fun openSettingsActivity() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+            startActivity(intent)
+        } else {
+            val intent = Intent(Settings.ACTION_SETTINGS)
+            startActivity(intent)
+        }
+    }
+
     private fun saveBitmapToFile(bitmap: Bitmap, packageName: String): String? {
         try {
             val iconFile = File(cacheDir, "icon_" + packageName + ".png")
@@ -153,6 +203,40 @@ class MainActivity: FlutterActivity() {
             startActivity(intent)
         } catch (e: Exception) {
             // Log an error
+        }
+    }
+
+    private fun searchFirefox(query: String) {
+        val intent = Intent(Intent.ACTION_WEB_SEARCH)
+        intent.setPackage("org.mozilla.firefox")
+        intent.putExtra(SearchManager.QUERY, query)
+        startActivity(intent)
+    }
+
+    private fun searchYoutube(query: String) {
+        val intent = Intent(Intent.ACTION_SEARCH)
+        intent.setPackage("app.revanced.android.youtube")
+        intent.putExtra("query", query)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+    }
+
+    private fun searchChatgpt(query: String) {
+        openApp("com.openai.chatgpt")
+    }
+    
+    private fun searchAmazon(query: String) {
+        val encodedQuery: String = Uri.encode(query)
+        val uri: Uri = Uri.parse("amzn://apps/android?p=$encodedQuery")
+        val intent = Intent(Intent.ACTION_VIEW, uri)
+        intent.setPackage("in.amazon.mShop.android.shopping")
+
+        if (intent.resolveActivity(packageManager) != null) {
+            startActivity(intent)
+        } else {
+            val webUri: Uri = Uri.parse("https://www.amazon.com/s?k=$encodedQuery")
+            val webIntent = Intent(Intent.ACTION_VIEW, webUri)
+            startActivity(webIntent)
         }
     }
 

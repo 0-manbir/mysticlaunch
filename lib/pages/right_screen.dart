@@ -495,9 +495,12 @@ class _RightScreenState extends State<RightScreen> {
                       : _repetitiveTaskController.text.split(",");
                   _prefs.setStringList(prefsTasksRepetitive, list);
 
+                  if (Navigator.canPop(buildContext)) {
+                    Navigator.pop(buildContext);
+                  }
+
                   setState(() {
                     getTasksList();
-                    Navigator.pop(buildContext);
                   });
                 },
                 style: ButtonStyle(
