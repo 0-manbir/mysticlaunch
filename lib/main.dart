@@ -29,27 +29,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    // Listen for home button presses
-    // This will trigger whenever the home button is pressed on Android
-    // You can also use WillPopScope to listen for back button presses
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      FocusScope.of(context).requestFocus(FocusNode());
-      RawKeyboard.instance.addListener(_handleKeyEvent);
-    });
-  }
-
-  void _handleKeyEvent(RawKeyEvent event) {
-    if (event is RawKeyDownEvent) {
-      if (event.logicalKey == LogicalKeyboardKey.home) {
-        // When the home button is pressed, set the page controller to index 1 (home screen)
-        _pageController.jumpToPage(1);
-      }
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -418,8 +397,8 @@ class _MyAppState extends State<MyApp> {
 
     // called after the bottom sheet is completely shown
     Future.delayed(const Duration(milliseconds: 200), () async {
-      await loadApps();
       FocusScope.of(context).requestFocus(_focusNode);
+      loadApps();
     });
   }
 

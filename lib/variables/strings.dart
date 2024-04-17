@@ -17,6 +17,7 @@ const String prefsWeather = 'weather';
 const String prefsHomeScreenAppsAlignment = 'homeScreenAppsAlignment';
 const String prefsLeftScreenApps = 'prefsLeftScreenApps';
 const String prefsRightScreenApps = 'prefsRightScreenApps';
+const String prefsDisplayedAppsList = 'prefsDisplayedAppsList';
 
 const String prefsDayStart = 'dayStart';
 const String prefsDayEnd = 'dayEnd';
