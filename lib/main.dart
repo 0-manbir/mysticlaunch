@@ -380,6 +380,8 @@ class _MyAppState extends State<MyApp> {
                         });
                       }
 
+                      value = value.trim();
+
                       filterApps(value, context);
 
                       setState(() {
@@ -398,7 +400,7 @@ class _MyAppState extends State<MyApp> {
     // called after the bottom sheet is completely shown
     Future.delayed(const Duration(milliseconds: 200), () async {
       FocusScope.of(context).requestFocus(_focusNode);
-      loadApps();
+      loadApps(buildContext);
     });
   }
 
@@ -447,7 +449,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  Future<void> loadApps() async {
+  Future<void> loadApps(BuildContext buildContext) async {
     List<Application> apps = await DeviceApps.getInstalledApplications(
       onlyAppsWithLaunchIntent: true,
       includeSystemApps: true,
@@ -461,12 +463,13 @@ class _MyAppState extends State<MyApp> {
       allApps = apps;
       displayedApps = [];
       recentApps = sortedApps;
+      filterApps(searchTextController.text, buildContext);
     });
   }
 
   void filterApps(String query, BuildContext buildContext) {
     // check if the query is empty
-    if (query.trim() == '') {
+    if (query == '') {
       setState(() {
         displayedApps = [];
       });
