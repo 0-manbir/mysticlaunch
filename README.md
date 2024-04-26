@@ -2,11 +2,10 @@
 ![Banner](https://github.com/0-manbir/mlauncher/assets/144022685/b14af349-e84c-46cf-8fb0-2d58e58c6528)
 
 # MLauncher
-
-A Minimal Launcher Application for Android!
+A Minimal Android Launcher App!
 
 ## APK File Direct Download
-[Google Drive Link](https://drive.google.com/file/d/1BXRfCmm-v5spa1aflOkgQ-e4RjT_JKiG/view?usp=drive_link)
+[Google Drive Link](https://drive.google.com/file/d/14Wq4ev4m65cQ5cvzcfPuauYOHeELcOS_/view?usp=drive_link)
 
 ## Quick FAQs:
 
@@ -15,6 +14,14 @@ A Minimal Launcher Application for Android!
 
 **Platform** - Android\
 **APK File Size** - 21.8 MB
+
+## Screenshots
+<img src="https://github.com/0-manbir/mlauncher/assets/144022685/4a026457-6923-44d9-9ecc-d5742e3dfe23" height="400" alt="home screen">
+<img src="https://github.com/0-manbir/mlauncher/assets/144022685/dab4a086-62c5-42e5-b0bf-edc16d859fe6" height="400" alt="left screen">
+<img src="https://github.com/0-manbir/mlauncher/assets/144022685/6a1f26a1-a3de-438b-94e2-289484667b03" height="400" alt="right screen">
+<img src="https://github.com/0-manbir/mlauncher/assets/144022685/eb4d4b53-bdaf-4596-8ce0-bdf140946499" height="400" alt="app drawer">
+<img src="https://github.com/0-manbir/mlauncher/assets/144022685/fbcc48c3-cba9-49ee-a5a8-5181be85adce" height="400" alt="app search">
+
 
 ## Features
 
@@ -31,29 +38,19 @@ A Minimal Launcher Application for Android!
   - Open the Gmail App
   - Open Settings
 
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/781ad490-2900-4920-9190-36aeb0dd95ae" height="300" alt="throwback">
-
-<hr width="50%">
-
 ### Left Screen
 
 * Timer (Slide to set a timer)
 * Day Progress and Year Progress
 * Quick Access Apps (tools, for example)
 
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/e5828c8e-5fe6-44ae-8a29-a09ba5e6c176" height="300" alt="throwback">
-<hr width="50%">
-
 ### Right
 
-* 'click a new snap' - a photo journal app. <a href="https://github.com/0-manbir/snapbook">download</a>
+* 'click a new snap' - a photo journal app. <a href="https://github.com/0-manbir/snapbook">[download]</a>
 * Tasks
   - This Day (and tasks left from yesterday)
   - Daily Repetitive Tasks (long press the 'add a task' button)
 * 10 App Placeholders (Press an empty block to add, long press to remove)
-
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/f076da20-695f-406e-9de6-cca07c39b8f4" height="300" alt="calendar">
-<hr width="50%">
 
 ### App Drawer
 
@@ -62,15 +59,10 @@ A Minimal Launcher Application for Android!
 * Search Google, Youtube, Amazon, etc. just above the keyboard
 * View 'all apps' just like the system launcher
 
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/d929ea01-cb7b-44e6-b71c-c35c78119857" height="300" alt="app drawer">
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/e8c42cca-b432-49c5-9f5a-9d14ce2baec2" height="300" alt="app drawer search">
-<br>
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/9a0772a1-ef94-4768-96e6-b046913de4f6" height="300" alt="all apps">
-
-
-<hr width="50%">
 
 ## Edit Source Code
+
+[Note: <a href="https://openweathermap.org/api">Get your weather API Key</a> and add it in the Strings.dart file.]
 
 Clone the project
 

@@ -362,8 +362,8 @@ class _MyAppState extends State<MyApp> {
                       }
 
                       if (displayedApps.isEmpty) {
-                        // no app remains, search on google
-                        searchGoogle(value);
+                        // no app remains, search on firefox
+                        searchFirefox(value);
                         return;
                       }
 
