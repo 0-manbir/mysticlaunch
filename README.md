@@ -6,14 +6,14 @@ The Right Screen is the Productivity Zone which contains the perfect To-Do list 
 
 ## Download
 
-<a href="https://github.com/0-manbir/mysticlaunch/releases/latest/download/mysticlaunch.apk" target="_blank">Download Latest Release</a><br>
-<br><br>
+<a href="https://github.com/0-manbir/mysticlaunch/releases/latest/download/mysticlaunch.apk" target="_blank">Download Latest Release</a><br><br>
 
 ## Screenshots
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/4a026457-6923-44d9-9ecc-d5742e3dfe23" height="400" alt="home screen">
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/dab4a086-62c5-42e5-b0bf-edc16d859fe6" height="400" alt="left screen">
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/6a1f26a1-a3de-438b-94e2-289484667b03" height="400" alt="right screen">
-<img src="https://github.com/0-manbir/mlauncher/assets/144022685/fbcc48c3-cba9-49ee-a5a8-5181be85adce" height="400" alt="app search">
+
+<img src="https://github.com/0-manbir/mysticlaunch/assets/144022685/58630704-bd84-4194-bf83-72d497d75861" height="400" alt="home screen">
+<img src="https://github.com/0-manbir/mysticlaunch/assets/144022685/b8d401c9-6ce3-46a6-b4d6-1e93977ac2d0" height="400" alt="left screen">
+<img src="https://github.com/0-manbir/mysticlaunch/assets/144022685/3fdc947a-867f-4c3c-8506-fb3f9b67fbab" height="400" alt="right screen">
+<img src="https://github.com/0-manbir/mysticlaunch/assets/144022685/cfa826db-c29c-4b70-8df4-626ce7dcdc2f" height="400" alt="app drawer search">
 
 
 ## Features
