@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.manbir.mlauncher">
+    package="com.manbir.mysticlaunch">
 
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"/>
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR"/>
@@ -16,7 +16,7 @@
         tools:ignore="ProtectedPermissions" />
 
     <application
-        android:label="mlauncher"
+        android:label="mysticlaunch"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">

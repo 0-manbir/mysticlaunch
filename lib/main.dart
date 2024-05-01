@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mlauncher/helpers/grid_view.dart';
-import 'package:mlauncher/pages/home_screen.dart';
-import 'package:mlauncher/pages/left_screen.dart';
-import 'package:mlauncher/pages/right_screen.dart';
-import 'package:mlauncher/variables/colors.dart';
-import 'package:mlauncher/variables/strings.dart';
+import 'package:mysticlaunch/helpers/grid_view.dart';
+import 'package:mysticlaunch/pages/home_screen.dart';
+import 'package:mysticlaunch/pages/left_screen.dart';
+import 'package:mysticlaunch/pages/right_screen.dart';
+import 'package:mysticlaunch/variables/colors.dart';
+import 'package:mysticlaunch/variables/strings.dart';
 
 void main() {
   runApp(const MyApp());
@@ -549,7 +549,7 @@ class _MyAppState extends State<MyApp> {
   bool doesIconFileExist(String packageName) {
     String iconFileName = 'icon_$packageName.png';
     String iconFilePath =
-        '/data/user/0/$mlauncherPackageName/cache/$iconFileName';
+        '/data/user/0/$mysticlaunchPackageName/cache/$iconFileName';
 
     File iconFile = File(iconFilePath);
     return iconFile.existsSync();
@@ -559,7 +559,7 @@ class _MyAppState extends State<MyApp> {
     try {
       // Check if the icon file already exists
       if (doesIconFileExist(packageName)) {
-        return '/data/user/0/$mlauncherPackageName/cache/icon_$packageName.png';
+        return '/data/user/0/$mysticlaunchPackageName/cache/icon_$packageName.png';
       }
 
       String? appIconPath = await _channel

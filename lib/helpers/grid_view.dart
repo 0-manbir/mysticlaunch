@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mlauncher/variables/colors.dart';
-import 'package:mlauncher/variables/strings.dart';
+import 'package:mysticlaunch/variables/colors.dart';
+import 'package:mysticlaunch/variables/strings.dart';
 
 class AppsGridView {
   List displayedApps = [];
@@ -175,7 +175,7 @@ class AppsGridView {
   bool doesIconFileExist(String packageName) {
     String iconFileName = 'icon_$packageName.png';
     String iconFilePath =
-        '/data/user/0/$mlauncherPackageName/cache/$iconFileName';
+        '/data/user/0/$mysticlaunchPackageName/cache/$iconFileName';
 
     File iconFile = File(iconFilePath);
     return iconFile.existsSync();
@@ -186,7 +186,7 @@ class AppsGridView {
       // Check if the icon file already exists
       if (doesIconFileExist(packageName)) {
         String filePath =
-            '/data/user/0/$mlauncherPackageName/cache/icon_$packageName.png';
+            '/data/user/0/$mysticlaunchPackageName/cache/icon_$packageName.png';
         iconFilePath = filePath;
         return filePath;
       }

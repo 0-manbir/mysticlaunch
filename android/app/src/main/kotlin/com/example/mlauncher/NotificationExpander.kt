@@ -1,4 +1,4 @@
-package com.manbir.mlauncher
+package com.manbir.mysticlaunch
 
 import android.content.Context
 import android.os.Build

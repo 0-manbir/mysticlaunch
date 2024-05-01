@@ -1,4 +1,4 @@
-const String WEATHERMAP_API_KEY = "YOUR_API_KEY_HERE";
+const String WEATHERMAP_API_KEY = "0bc7fc0798ba56b2f836175ef5550bc3";
 
 // native methods
 const String methodOpenApp = "openApp";
@@ -28,6 +28,6 @@ const String prefsTasksThisDay = 'prefsTasksThisDay';
 const String prefsTasksRepetitive = 'prefsTasksRepetitive';
 
 // package names
-const String mlauncherPackageName = 'com.manbir.mlauncher';
+const String mysticlaunchPackageName = 'com.manbir.mysticlaunch';
 const String snapbookPackageName = "com.manbir.snapbook";
 const String gmailPackageName = 'com.google.android.gm';

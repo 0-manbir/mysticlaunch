@@ -1,4 +1,4 @@
-package com.manbir.mlauncher
+package com.manbir.mysticlaunch
 
 import android.app.Application
 import android.app.NotificationManager
