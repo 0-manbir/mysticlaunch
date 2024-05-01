@@ -30,6 +30,13 @@ class _LeftScreenState extends State<LeftScreen> {
   void _initSharedPreferences() async {
     _prefs = await SharedPreferences.getInstance();
     getLeftScreenApps();
+
+    if (_prefs.containsKey(prefsDayStart)) {
+      setState(() {
+        _startTime = _prefs.getString(prefsDayStart)!;
+        _endTime = _prefs.getString(prefsDayEnd)!;
+      });
+    }
   }
 
   @override
@@ -461,13 +468,14 @@ class _LeftScreenState extends State<LeftScreen> {
   void _showChangeDayTimesSheet(BuildContext buildContext) {
     double screenWidth = MediaQuery.of(buildContext).size.width;
     showModalBottomSheet(
+      backgroundColor: Colors.transparent,
       context: buildContext,
       builder: (context) {
         return Container(
           width: screenWidth,
-          decoration: BoxDecoration(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(40)),
-            color: Colors.grey[100],
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
+            color: backgroundColor,
           ),
           child: Column(
             children: [
@@ -475,7 +483,7 @@ class _LeftScreenState extends State<LeftScreen> {
               Text(
                 "enter the day start and end time:",
                 style: TextStyle(
-                  color: Colors.grey[500],
+                  color: darkTextColor,
                   fontFamily: 'Rubik',
                   fontSize: 16,
                 ),
@@ -496,10 +504,10 @@ class _LeftScreenState extends State<LeftScreen> {
                       maxLength: 2,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
-                      cursorColor: Colors.grey[500],
+                      cursorColor: darkTextColor,
                       style: TextStyle(
                         fontFamily: 'Rubik',
-                        color: Colors.grey[700],
+                        color: lightTextColor,
                         fontSize: 14,
                       ),
                       decoration: InputDecoration(
@@ -508,7 +516,7 @@ class _LeftScreenState extends State<LeftScreen> {
                         labelText: "HH",
                         labelStyle: TextStyle(
                           fontFamily: 'Rubik',
-                          color: Colors.grey[500],
+                          color: darkTextColor,
                           fontSize: 16,
                         ),
                       ),
@@ -526,10 +534,10 @@ class _LeftScreenState extends State<LeftScreen> {
                       maxLength: 2,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
-                      cursorColor: Colors.grey[500],
+                      cursorColor: darkTextColor,
                       style: TextStyle(
                         fontFamily: 'Rubik',
-                        color: Colors.grey[700],
+                        color: lightTextColor,
                         fontSize: 14,
                       ),
                       decoration: InputDecoration(
@@ -538,7 +546,7 @@ class _LeftScreenState extends State<LeftScreen> {
                         labelText: "MM",
                         labelStyle: TextStyle(
                           fontFamily: 'Rubik',
-                          color: Colors.grey[500],
+                          color: darkTextColor,
                           fontSize: 16,
                         ),
                       ),
@@ -565,10 +573,10 @@ class _LeftScreenState extends State<LeftScreen> {
                       maxLength: 2,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
-                      cursorColor: Colors.grey[500],
+                      cursorColor: darkTextColor,
                       style: TextStyle(
                         fontFamily: 'Rubik',
-                        color: Colors.grey[700],
+                        color: lightTextColor,
                         fontSize: 14,
                       ),
                       decoration: InputDecoration(
@@ -577,7 +585,7 @@ class _LeftScreenState extends State<LeftScreen> {
                         labelText: "HH",
                         labelStyle: TextStyle(
                           fontFamily: 'Rubik',
-                          color: Colors.grey[500],
+                          color: darkTextColor,
                           fontSize: 16,
                         ),
                       ),
@@ -595,10 +603,10 @@ class _LeftScreenState extends State<LeftScreen> {
                       maxLength: 2,
                       keyboardType: TextInputType.number,
                       textInputAction: TextInputAction.done,
-                      cursorColor: Colors.grey[500],
+                      cursorColor: darkTextColor,
                       style: TextStyle(
                         fontFamily: 'Rubik',
-                        color: Colors.grey[700],
+                        color: lightTextColor,
                         fontSize: 14,
                       ),
                       decoration: InputDecoration(
@@ -607,7 +615,7 @@ class _LeftScreenState extends State<LeftScreen> {
                         labelText: "MM",
                         labelStyle: TextStyle(
                           fontFamily: 'Rubik',
-                          color: Colors.grey[500],
+                          color: darkTextColor,
                           fontSize: 16,
                         ),
                       ),
@@ -628,14 +636,15 @@ class _LeftScreenState extends State<LeftScreen> {
                   _saveDayTimes(context);
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.grey[100]),
+                  backgroundColor:
+                      MaterialStateProperty.all(opaqueBackgroundColor),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
                     "save",
                     style: TextStyle(
-                      color: Colors.grey[700],
+                      color: lightTextColor,
                       fontFamily: 'Rubik',
                       fontSize: 18,
                     ),
@@ -668,10 +677,10 @@ class _LeftScreenState extends State<LeftScreen> {
     Navigator.pop(buildContext);
     HapticFeedback.heavyImpact();
 
-    if (_dayStartEditControllerHour.text == '' ||
-        _dayStartEditControllerMin.text == '' ||
-        _dayEndEditControllerHour.text == '' ||
-        _dayEndEditControllerMin.text == '') {
+    if (_dayStartEditControllerHour.text == "" ||
+        _dayStartEditControllerMin.text == "" ||
+        _dayEndEditControllerHour.text == "" ||
+        _dayEndEditControllerMin.text == "") {
       return;
     }
 

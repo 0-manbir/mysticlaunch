@@ -68,6 +68,7 @@ class _RightScreenState extends State<RightScreen> {
           vertical: 20.0,
         ),
         child: GridView.builder(
+          physics: const NeverScrollableScrollPhysics(),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 5,
             crossAxisSpacing: 12.0,
@@ -108,7 +109,7 @@ class _RightScreenState extends State<RightScreen> {
     return GestureDetector(
       child: Container(
         decoration: BoxDecoration(
-          color: backgroundColor,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(15),
         ),
         child: FutureBuilder<String?>(

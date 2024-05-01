@@ -174,14 +174,15 @@ class _HomeScreenState extends State<HomeScreen> {
           // show options to edit the app name / delete the app from home screen
           showModalBottomSheet(
             context: buildContext,
+            backgroundColor: backgroundColor,
             builder: (context) {
               return Container(
                 width: screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.vertical(
                     top: Radius.circular(40),
                   ),
-                  color: Colors.grey[100],
+                  color: backgroundColor,
                 ),
                 child: Column(
                   children: [
@@ -190,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Text(
                       "enter the app name: ",
                       style: TextStyle(
-                        color: Colors.grey[500],
+                        color: darkTextColor,
                         fontFamily: 'Rubik',
                         fontSize: 20,
                       ),
@@ -201,10 +202,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         controller: _homeScreenNameEditController,
                         maxLines: 1,
                         textInputAction: TextInputAction.done,
-                        cursorColor: Colors.grey[500],
+                        cursorColor: darkTextColor,
                         style: TextStyle(
                           fontFamily: 'Rubik',
-                          color: Colors.grey[700],
+                          color: lightTextColor,
                           fontSize: 14,
                         ),
                         decoration: InputDecoration(
@@ -212,7 +213,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           labelText: "name",
                           labelStyle: TextStyle(
                             fontFamily: 'Rubik',
-                            color: Colors.grey[500],
+                            color: darkTextColor,
                             fontSize: 16,
                           ),
                         ),
@@ -227,10 +228,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         maxLines: 1,
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.done,
-                        cursorColor: Colors.grey[500],
+                        cursorColor: darkTextColor,
                         style: TextStyle(
                           fontFamily: 'Rubik',
-                          color: Colors.grey[700],
+                          color: lightTextColor,
                           fontSize: 14,
                         ),
                         decoration: InputDecoration(
@@ -238,7 +239,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           labelText: "position (starting at 0)",
                           labelStyle: TextStyle(
                             fontFamily: 'Rubik',
-                            color: Colors.grey[500],
+                            color: darkTextColor,
                             fontSize: 16,
                           ),
                         ),
@@ -253,12 +254,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: opaqueBackgroundColor,
                               borderRadius: BorderRadius.circular(25),
                             ),
                             child: Icon(
                               Icons.format_align_center_rounded,
-                              color: Colors.grey[600],
+                              color: lightTextColor,
                               size: 28,
                             ),
                           ),
@@ -308,12 +309,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: opaqueBackgroundColor,
                               borderRadius: BorderRadius.circular(25),
                             ),
                             child: Icon(
                               Icons.delete_forever_rounded,
-                              color: Colors.grey[600],
+                              color: lightTextColor,
                               size: 28,
                             ),
                           ),
@@ -344,12 +345,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Container(
                             padding: const EdgeInsets.all(16.0),
                             decoration: BoxDecoration(
-                              color: Colors.grey[200],
+                              color: opaqueBackgroundColor,
                               borderRadius: BorderRadius.circular(25),
                             ),
                             child: Icon(
                               Icons.done_all_rounded,
-                              color: Colors.grey[600],
+                              color: lightTextColor,
                               size: 28,
                             ),
                           ),

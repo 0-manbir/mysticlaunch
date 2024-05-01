@@ -38,12 +38,12 @@ class _MyAppState extends State<MyApp> {
           _pageController.jumpToPage(1);
         },
         child: Scaffold(
-          backgroundColor: backgroundColor,
+          backgroundColor: Colors.transparent,
           appBar: AppBar(
-            backgroundColor: backgroundColor,
+            backgroundColor: Colors.transparent,
             toolbarHeight: 0,
             systemOverlayStyle: const SystemUiOverlayStyle(
-              systemNavigationBarColor: backgroundColor,
+              systemNavigationBarColor: Colors.transparent,
               statusBarColor: Colors.transparent,
             ),
           ),
