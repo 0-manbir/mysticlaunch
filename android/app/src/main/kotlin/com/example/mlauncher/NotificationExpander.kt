@@ -1,4 +1,4 @@
-package com.example.mlauncher
+package com.manbir.mlauncher
 
 import android.content.Context
 import android.os.Build

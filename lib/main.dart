@@ -271,6 +271,22 @@ class _MyAppState extends State<MyApp> {
                               color: opaqueBackgroundColor,
                               borderRadius: BorderRadius.circular(16),
                             ),
+                            child: Image.asset("icons/app_playstore.png"),
+                          ),
+                          onTap: () {
+                            if (Navigator.canPop(buildContext)) {
+                              Navigator.pop(buildContext);
+                            }
+                            searchPlayStore(searchTextController.text);
+                          },
+                        ),
+                        Container(width: 8),
+                        GestureDetector(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: opaqueBackgroundColor,
+                              borderRadius: BorderRadius.circular(16),
+                            ),
                             child: Image.asset("icons/app_amazon.png"),
                           ),
                           onTap: () {
@@ -600,6 +616,14 @@ class _MyAppState extends State<MyApp> {
       await _channel.invokeMethod(methodSearchChatGPT, {'query': query});
     } catch (e) {
       // print('Error invoking search chat gpt method: $e');
+    }
+  }
+
+  Future<void> searchPlayStore(String query) async {
+    try {
+      await _channel.invokeMethod(methodSearchPlayStore, {'query': query});
+    } catch (e) {
+      // print('Error invoking search play store method: $e');
     }
   }
 

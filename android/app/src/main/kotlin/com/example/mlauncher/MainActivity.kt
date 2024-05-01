@@ -1,4 +1,4 @@
-package com.example.mlauncher
+package com.manbir.mlauncher
 
 import android.app.Application
 import android.app.NotificationManager
@@ -75,6 +75,15 @@ class MainActivity: FlutterActivity() {
                     val query = call.argument<String>("query")
                     if (query != null) {
                         searchGoogle(query)
+                        result.success(null)
+                    } else {
+                        result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
+                    }
+                }
+                "searchPlayStore" -> {
+                    val query = call.argument<String>("query")
+                    if (query != null) {
+                        searchPlayStore(query)
                         result.success(null)
                     } else {
                         result.error("MISSING_ARGUMENT", "Query parameter is missing", null)
@@ -201,6 +210,19 @@ class MainActivity: FlutterActivity() {
             val intent = Intent(Intent.ACTION_WEB_SEARCH)
             intent.putExtra(SearchManager.QUERY, query)
             startActivity(intent)
+        } catch (e: Exception) {
+            // Log an error
+        }
+    }
+
+    private fun searchPlayStore(query: String) {
+        try {
+            val encodedQuery = Uri.encode(query)
+            val uri = Uri.parse("https://play.google.com/store/search?q=$encodedQuery")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            intent.setPackage("com.android.vending") // Package name of Google Play Store app
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            context.startActivity(intent)
         } catch (e: Exception) {
             // Log an error
         }
