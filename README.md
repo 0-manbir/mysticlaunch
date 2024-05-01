@@ -6,8 +6,7 @@ The Right Screen is the Productivity Zone which contains the perfect To-Do list 
 
 ## Download
 
-<a href="https://github.com/0-manbir/mlauncher/releases/latest/download/mlauncher.apk" target="_blank">Download Latest Release</a><br>
-<a href="https://drive.google.com/file/d/14Wq4ev4m65cQ5cvzcfPuauYOHeELcOS_/view?usp=sharing" target="_blank">Google Drive Link</a>
+<a href="https://github.com/0-manbir/mysticlaunch/releases/latest/download/mysticlaunch.apk" target="_blank">Download Latest Release</a><br>
 <br><br>
 
 ## Screenshots
