@@ -1,6 +1,6 @@
-![Banner](https://github.com/0-manbir/mlauncher/assets/144022685/b14af349-e84c-46cf-8fb0-2d58e58c6528)
+![Banner](https://github.com/0-manbir/mysticlaunch/assets/144022685/cc3e16b6-f6d1-424d-ab11-44cd7f40f172)
 
-mlauncher is a minimalist launcher for Android. It has a home screen which features text-based quick shortcuts for apps.
+MysticLaunch is a minimalist launcher for Android. It has a home screen which features text-based quick shortcuts for apps.
 The Left Screen emphasises on utility. You can add up to 5 most used tools. It also features a timer, and bars representing the day and the year progress.
 The Right Screen is the Productivity Zone which contains the perfect To-Do list for your day. You can also set repetitive tasks (daily).
 
