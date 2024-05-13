@@ -32,8 +32,8 @@ const String mysticlaunchPackageName = 'com.manbir.mysticlaunch';
 const String snapbookPackageName = "com.manbir.snapbook";
 const String gmailPackageName = 'com.google.android.gm';
 
-const String googlePackageName = '';
-const String youtubePackageName = '';
-const String googleplaystorePackageName = '';
-const String amazonPackageName = '';
-const String firefoxPackageName = '';
+const String googlePackageName = 'com.google.android.googlequicksearchbox';
+const String youtubePackageName = 'app.revanced.android.youtube';
+const String googleplaystorePackageName = 'com.android.vending';
+const String amazonPackageName = 'in.amazon.mShop.android.shopping';
+const String firefoxPackageName = 'org.mozilla.firefox';

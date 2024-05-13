@@ -209,6 +209,7 @@ class MainActivity: FlutterActivity() {
         try {
             val intent = Intent(Intent.ACTION_WEB_SEARCH)
             intent.putExtra(SearchManager.QUERY, query)
+            intent.setPackage("com.google.android.googlequicksearchbox")
             startActivity(intent)
         } catch (e: Exception) {
             // Log an error
