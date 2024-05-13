@@ -588,6 +588,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> searchGoogle(String query) async {
+    if (query.trim() == "") {
+      openAppByPackageName(googlePackageName);
+      return;
+    }
     try {
       await _channel.invokeMethod(methodSearchGoogle, {'query': query});
     } catch (e) {
@@ -596,6 +600,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> searchFirefox(String query) async {
+    if (query.trim() == "") {
+      openAppByPackageName(firefoxPackageName);
+      return;
+    }
     try {
       await _channel.invokeMethod(methodSearchFirefox, {'query': query});
     } catch (e) {
@@ -604,6 +612,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> searchYoutube(String query) async {
+    if (query.trim() == "") {
+      openAppByPackageName(youtubePackageName);
+      return;
+    }
     try {
       await _channel.invokeMethod(methodSearchYoutube, {'query': query});
     } catch (e) {
@@ -620,6 +632,10 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> searchPlayStore(String query) async {
+    if (query.trim() == "") {
+      openAppByPackageName(googleplaystorePackageName);
+      return;
+    }
     try {
       await _channel.invokeMethod(methodSearchPlayStore, {'query': query});
     } catch (e) {
@@ -628,10 +644,23 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> searchAmazon(String query) async {
+    if (query.trim() == "") {
+      openAppByPackageName(amazonPackageName);
+      return;
+    }
+
     try {
       await _channel.invokeMethod(methodSearchAmazon, {'query': query});
     } catch (e) {
       // print('Error invoking search amazon method: $e');
+    }
+  }
+
+  Future<void> openAppByPackageName(String packageName) async {
+    try {
+      await _channel.invokeMethod(methodOpenApp, {'packageName': packageName});
+    } catch (e) {
+      // print('error in launching app $e');
     }
   }
 

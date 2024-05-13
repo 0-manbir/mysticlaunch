@@ -31,3 +31,9 @@ const String prefsTasksRepetitive = 'prefsTasksRepetitive';
 const String mysticlaunchPackageName = 'com.manbir.mysticlaunch';
 const String snapbookPackageName = "com.manbir.snapbook";
 const String gmailPackageName = 'com.google.android.gm';
+
+const String googlePackageName = '';
+const String youtubePackageName = '';
+const String googleplaystorePackageName = '';
+const String amazonPackageName = '';
+const String firefoxPackageName = '';
