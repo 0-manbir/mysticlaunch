@@ -643,7 +643,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Container(height: 6),
                     Text(
-                      "${DateTime.now().day.toString()} ${DateFormat.MMMM().format(DateTime.now())}",
+                      "${DateTime.now().day.toString()} ${DateFormat.MMM().format(DateTime.now())}",
                       style: TextStyle(
                         fontSize: 20,
                         color: lightTextColor,
