@@ -20,6 +20,11 @@ The Right Screen is the Productivity Zone which contains the perfect To-Do list 
 
 ### Home
 
+* Top View
+  - Clock View -> click to open alarms
+  - Date -> click to open the default calendar app
+  - Temperature -> click to refresh weather
+
 * Home Screen Apps (long press an App Name)
   - Edit the name of Apps
   - Change the alignment of the Apps View
@@ -41,13 +46,14 @@ The Right Screen is the Productivity Zone which contains the perfect To-Do list 
 
 * 'click a new snap' - <a href="https://github.com/0-manbir/snapbook">snapbook</a> is a photo journal app.
 * Tasks
-  - This Day (and tasks left from yesterday)
+  - This Day (and tasks left from yesterday) (click the 'add a task' button, or click on the 'tasks view' background)
   - Daily Repetitive Tasks (long press the 'add a task' button)
 * 10 App Placeholders (Press an empty block to add, long press to remove)
 
 ### App Drawer
 
 * Keyboard opens automatically (on swiping up from the home screen)
+* Click the search button on the keyboard to open the search result app (the bottom-most app)
 * 10 Recent Apps shown on top (scroll the five apps)
 * Search Google, Youtube, Amazon, etc. just above the keyboard
 * View 'all apps' just like the system launcher
