@@ -4,6 +4,10 @@ MysticLaunch is a minimalist launcher for Android. It has a home screen which fe
 The Left Screen emphasises on utility. You can add up to 5 most used tools. It also features a timer, and bars representing the day and the year progress.
 The Right Screen is the Productivity Zone which contains the perfect To-Do list for your day. You can also set repetitive tasks (daily).
 
+# Newer Version
+A newer version is now available <a href="https://github.com/0-manbir/minimalauncher/" target="_blank">here</a>.<br>
+_minimalauncher_ is much more customizable and user-friendly.
+
 ## Download
 
 <a href="https://github.com/0-manbir/mysticlaunch/releases/latest/download/mysticlaunch.apk" target="_blank">Download Latest Release</a><br><br>
